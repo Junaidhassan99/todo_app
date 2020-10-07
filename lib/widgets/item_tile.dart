@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -21,9 +20,13 @@ class ItemTile extends StatelessWidget {
         ListTile(
           subtitle: Text('${DateFormat.yMMMMEEEEd().format(dateTime)}'),
           leading: CircleAvatar(
+            backgroundColor: Theme.of(context).primaryColor,
             child: Text(
               '${index + 1}',
               overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
           ),
           title: Text(

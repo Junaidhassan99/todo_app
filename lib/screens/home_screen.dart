@@ -29,6 +29,14 @@ class HomeScreen extends StatelessWidget {
           },
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).primaryColor,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        onPressed: null,
+      ),
     );
   }
 }

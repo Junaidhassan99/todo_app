@@ -10,7 +10,10 @@ class TodoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      theme: ThemeData.dark(),
+      theme: ThemeData.dark().copyWith(
+        primaryColor: Colors.red,
+        accentColor: Colors.red,
+      ),
       home: HomeScreen(),
       routes: {
         HomeScreen.routeName: (_) => HomeScreen(),
