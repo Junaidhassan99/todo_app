@@ -5,10 +5,12 @@ class Item {
   final String title;
   final DateTime dateTime;
   final String stringId;
+  final String description;
   Item({
     @required this.dateTime,
     @required this.stringId,
     @required this.title,
+    this.description,
   });
 }
 
@@ -29,7 +31,7 @@ class Items extends GetxController {
       stringId: '3',
       title: 'Sleep',
     ),
-     Item(
+    Item(
       dateTime: DateTime.now(),
       stringId: '4',
       title: 'Work',

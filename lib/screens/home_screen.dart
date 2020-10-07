@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:todo_app/models/items.dart';
+import 'package:todo_app/screens/edit_item_screen.dart';
 import 'package:todo_app/widgets/item_tile.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -35,7 +36,8 @@ class HomeScreen extends StatelessWidget {
           Icons.add,
           color: Colors.white,
         ),
-        onPressed: null,
+        onPressed: () =>
+            Get.toNamed(EditItemScreen.routeName),
       ),
     );
   }
