@@ -38,12 +38,12 @@ class Items extends GetxController {
     ),
     Item(
       dateTime: DateTime.now(),
-      stringId: '4',
+      stringId: '5',
       title: 'Work',
     ),
     Item(
       dateTime: DateTime.now(),
-      stringId: '4',
+      stringId: '6',
       title: 'Work',
     ),
   ].obs;
@@ -54,5 +54,9 @@ class Items extends GetxController {
 
   void addItem(Item item) {
     _itemsData.insert(0, item);
+  }
+
+  void removeItem(String itemId) {
+    _itemsData.removeWhere((item) => item.stringId == itemId);
   }
 }

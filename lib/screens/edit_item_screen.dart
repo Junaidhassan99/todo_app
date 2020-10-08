@@ -61,7 +61,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Item'),
+        title: Text('Add Item'),
         actions: [
           FlatButton(
             onPressed: _saveForm,

@@ -8,7 +8,7 @@ import 'package:todo_app/widgets/item_tile.dart';
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home-screen';
 
-  final itemsController = Get.put(Items());
+  final _itemsController = Get.put(Items());
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +19,18 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Obx(
         () => ListView.builder(
-          itemCount: itemsController.getItems.length,
+          itemCount: _itemsController.getItems.length,
           itemBuilder: (_, index) {
-            final itemsIndexData = itemsController.getItems[index];
-            return ItemTile(
-              index: index,
-              title: itemsIndexData.title,
-              dateTime: itemsIndexData.dateTime,
+            final itemsIndexData = _itemsController.getItems[index];
+            return Dismissible(
+              onDismissed: (_) =>
+                  _itemsController.removeItem(itemsIndexData.stringId),
+              key: Key(itemsIndexData.stringId),
+              child: ItemTile(
+                index: index,
+                title: itemsIndexData.title,
+                dateTime: itemsIndexData.dateTime,
+              ),
             );
           },
         ),
@@ -36,8 +41,7 @@ class HomeScreen extends StatelessWidget {
           Icons.add,
           color: Colors.white,
         ),
-        onPressed: () =>
-            Get.toNamed(EditItemScreen.routeName),
+        onPressed: () => Get.toNamed(EditItemScreen.routeName),
       ),
     );
   }
