@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+
 import 'package:todo_app/widgets/date_picker.dart';
 
 class EditItemScreen extends StatefulWidget {
@@ -13,14 +13,20 @@ class EditItemScreen extends StatefulWidget {
 class _EditItemScreenState extends State<EditItemScreen> {
   final FocusNode titleFocusNode = FocusNode();
   final FocusNode descriptionFocusNode = FocusNode();
+  final _formKey = GlobalKey<FormState>();
 
   final defaultPadding = Get.width * 0.03;
-
   DateTime _dateResponse = DateTime.now();
 
   void setDateResponseCallBack(DateTime data) {
     _dateResponse = data;
     print('call back: $_dateResponse');
+  }
+
+  void _saveForm() {
+    if (_formKey.currentState.validate() && _dateResponse != null) {
+      _formKey.currentState.save();
+    }
   }
 
   @override
@@ -36,7 +42,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
         title: Text('Edit Item'),
         actions: [
           FlatButton(
-            onPressed: null,
+            onPressed: _saveForm,
             child: Text('Save'),
           ),
         ],
@@ -44,6 +50,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
       body: Container(
         padding: EdgeInsets.all(defaultPadding),
         child: Form(
+          key: _formKey,
           child: ListView(
             children: [
               TextFormField(
@@ -53,6 +60,13 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 onFieldSubmitted: (value) =>
                     descriptionFocusNode.requestFocus(),
                 textInputAction: TextInputAction.next,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Title cannot be empty';
+                  } else {
+                    return null;
+                  }
+                },
               ),
               DatePicker(
                 setDateResponse: setDateResponseCallBack,
@@ -62,6 +76,13 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(labelText: 'Description'),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Description cannot be empty';
+                  } else {
+                    return null;
+                  }
+                },
               ),
             ],
           ),
