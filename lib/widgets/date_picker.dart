@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DatePicker extends StatefulWidget {
-  final void Function (DateTime dateResponseData) setDateResponse;
+  final void Function(DateTime dateResponseData) setDateResponse;
   DatePicker({
     @required this.setDateResponse,
   });
@@ -12,7 +12,13 @@ class DatePicker extends StatefulWidget {
 }
 
 class _DatePickerState extends State<DatePicker> {
-  DateTime _dateResponse = DateTime.now();
+  DateTime _dateResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    _dateResponse = DateTime.now();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +60,7 @@ class _DatePickerState extends State<DatePicker> {
                 setState(
                   () {
                     _dateResponse = errorCaseDate;
-                     widget.setDateResponse(_dateResponse);
+                    widget.setDateResponse(_dateResponse);
                   },
                 );
               }

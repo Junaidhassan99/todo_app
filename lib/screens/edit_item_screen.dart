@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:todo_app/models/items.dart';
 
 import 'package:todo_app/widgets/date_picker.dart';
 
@@ -11,12 +12,13 @@ class EditItemScreen extends StatefulWidget {
 }
 
 class _EditItemScreenState extends State<EditItemScreen> {
-  final FocusNode titleFocusNode = FocusNode();
-  final FocusNode descriptionFocusNode = FocusNode();
+  final FocusNode _titleFocusNode = FocusNode();
+  final FocusNode _descriptionFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
 
-  final defaultPadding = Get.width * 0.03;
-  DateTime _dateResponse = DateTime.now();
+  final _defaultPadding = Get.width * 0.03;
+  DateTime _dateResponse;
+  Item _item;
 
   void setDateResponseCallBack(DateTime data) {
     _dateResponse = data;
@@ -26,13 +28,29 @@ class _EditItemScreenState extends State<EditItemScreen> {
   void _saveForm() {
     if (_formKey.currentState.validate() && _dateResponse != null) {
       _formKey.currentState.save();
+      _item = Item(
+        dateTime: _dateResponse,
+        stringId: _item.stringId,
+        title: _item.title,
+        description: _item.description,
+      );
     }
+    print(
+      'check: ${_item.title},${_item.description},${_item.stringId},${_item.dateTime}',
+    );
   }
 
   @override
   void initState() {
-    titleFocusNode.requestFocus();
     super.initState();
+    _titleFocusNode.requestFocus();
+    _dateResponse = DateTime.now();
+    _item = Item(
+      dateTime: _dateResponse,
+      stringId: _dateResponse.toString(),
+      title: '',
+      description: '',
+    );
   }
 
   @override
@@ -48,17 +66,17 @@ class _EditItemScreenState extends State<EditItemScreen> {
         ],
       ),
       body: Container(
-        padding: EdgeInsets.all(defaultPadding),
+        padding: EdgeInsets.all(_defaultPadding),
         child: Form(
           key: _formKey,
           child: ListView(
             children: [
               TextFormField(
-                focusNode: titleFocusNode,
+                focusNode: _titleFocusNode,
                 keyboardType: TextInputType.name,
                 decoration: const InputDecoration(labelText: 'Title'),
                 onFieldSubmitted: (value) =>
-                    descriptionFocusNode.requestFocus(),
+                    _descriptionFocusNode.requestFocus(),
                 textInputAction: TextInputAction.next,
                 validator: (value) {
                   if (value.isEmpty) {
@@ -67,12 +85,20 @@ class _EditItemScreenState extends State<EditItemScreen> {
                     return null;
                   }
                 },
+                onSaved: (newValue) {
+                  _item = Item(
+                    dateTime: _item.dateTime,
+                    stringId: _item.stringId,
+                    title: newValue,
+                    description: _item.description,
+                  );
+                },
               ),
               DatePicker(
                 setDateResponse: setDateResponseCallBack,
               ),
               TextFormField(
-                focusNode: descriptionFocusNode,
+                focusNode: _descriptionFocusNode,
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(labelText: 'Description'),
@@ -82,6 +108,14 @@ class _EditItemScreenState extends State<EditItemScreen> {
                   } else {
                     return null;
                   }
+                },
+                onSaved: (newValue) {
+                  _item = Item(
+                    dateTime: _item.dateTime,
+                    stringId: _item.stringId,
+                    title: _item.title,
+                    description: newValue,
+                  );
                 },
               ),
             ],
