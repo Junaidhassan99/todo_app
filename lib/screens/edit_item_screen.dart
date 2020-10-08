@@ -44,8 +44,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
       );
       if (editItemScreenMode == EditItemScreenMode.Add) {
         _itemsController.addItem(_item);
-      }else{
-         _itemsController.updateItem(_item);
+      } else {
+        _itemsController.updateItem(_item);
       }
 
       Get.back();
@@ -72,6 +72,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
       editItemScreenMode = EditItemScreenMode.Edit;
 
       _item = _itemsController.getItemById(itemId);
+
+      print('Work: ${_item.dateTime}');
     }
   }
 
@@ -130,6 +132,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
               ),
               DatePicker(
                 setDateResponse: setDateResponseCallBack,
+                setDateData: _item.dateTime,
               ),
               TextFormField(
                 initialValue: _item.description,

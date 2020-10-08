@@ -3,8 +3,10 @@ import 'package:intl/intl.dart';
 
 class DatePicker extends StatefulWidget {
   final void Function(DateTime dateResponseData) setDateResponse;
+  final DateTime setDateData;
   DatePicker({
     @required this.setDateResponse,
+    @required this.setDateData,
   });
 
   @override
@@ -17,7 +19,10 @@ class _DatePickerState extends State<DatePicker> {
   @override
   void initState() {
     super.initState();
-    _dateResponse = DateTime.now();
+    //_dateResponse = DateTime.now();
+    _dateResponse = widget.setDateData;
+    widget.setDateResponse(_dateResponse);
+    print('Work 2: $_dateResponse');
   }
 
   @override
@@ -54,12 +59,14 @@ class _DatePickerState extends State<DatePicker> {
               //print(dateResponse);
               if (_dateResponse != null) {
                 setState(() {
+                  print('Work 3 !null: $_dateResponse');
                   widget.setDateResponse(_dateResponse);
                 });
               } else {
                 setState(
                   () {
                     _dateResponse = errorCaseDate;
+                    print('Work 4 null: $_dateResponse');
                     widget.setDateResponse(_dateResponse);
                   },
                 );
