@@ -4,6 +4,11 @@ import 'package:todo_app/models/items.dart';
 
 import 'package:todo_app/widgets/date_picker.dart';
 
+enum EditItemScreenMode {
+  Edit,
+  Add,
+}
+
 class EditItemScreen extends StatefulWidget {
   static const routeName = '/edit-item-screen';
 
@@ -19,6 +24,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
   final _defaultPadding = Get.width * 0.03;
   DateTime _dateResponse;
   Item _item;
+  EditItemScreenMode editItemScreenMode;
 
   final _itemsController = Get.find<Items>();
 
@@ -36,7 +42,12 @@ class _EditItemScreenState extends State<EditItemScreen> {
         title: _item.title,
         description: _item.description,
       );
-      _itemsController.addItem(_item);
+      if (editItemScreenMode == EditItemScreenMode.Add) {
+        _itemsController.addItem(_item);
+      }else{
+         _itemsController.updateItem(_item);
+      }
+
       Get.back();
     }
     print(
@@ -44,24 +55,42 @@ class _EditItemScreenState extends State<EditItemScreen> {
     );
   }
 
+  void _determineEditModeAndInitializeItem() {
+    _dateResponse = DateTime.now();
+    final String itemId = Get.arguments as String;
+    print(itemId);
+    if (itemId == null) {
+      editItemScreenMode = EditItemScreenMode.Add;
+
+      _item = Item(
+        dateTime: _dateResponse,
+        stringId: _dateResponse.toString(),
+        title: '',
+        description: '',
+      );
+    } else {
+      editItemScreenMode = EditItemScreenMode.Edit;
+
+      _item = _itemsController.getItemById(itemId);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _determineEditModeAndInitializeItem();
     _titleFocusNode.requestFocus();
-    _dateResponse = DateTime.now();
-    _item = Item(
-      dateTime: _dateResponse,
-      stringId: _dateResponse.toString(),
-      title: '',
-      description: '',
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Item'),
+        title: Text(
+          editItemScreenMode == EditItemScreenMode.Add
+              ? 'Add Item'
+              : 'Edit Item',
+        ),
         actions: [
           FlatButton(
             onPressed: _saveForm,
@@ -76,6 +105,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
           child: ListView(
             children: [
               TextFormField(
+                initialValue: _item.title,
                 focusNode: _titleFocusNode,
                 keyboardType: TextInputType.name,
                 decoration: const InputDecoration(labelText: 'Title'),
@@ -102,6 +132,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 setDateResponse: setDateResponseCallBack,
               ),
               TextFormField(
+                initialValue: _item.description,
                 focusNode: _descriptionFocusNode,
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,

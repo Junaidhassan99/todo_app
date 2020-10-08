@@ -59,4 +59,14 @@ class Items extends GetxController {
   void removeItem(String itemId) {
     _itemsData.removeWhere((item) => item.stringId == itemId);
   }
+
+  Item getItemById(String itemId) {
+    return _itemsData.firstWhere((item) => item.stringId == itemId);
+  }
+
+  void updateItem(Item mItem) {
+    int itemIndex =
+        _itemsData.indexWhere((item) => item.stringId == mItem.stringId);
+    _itemsData[itemIndex] = mItem;
+  }
 }

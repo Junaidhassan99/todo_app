@@ -27,6 +27,7 @@ class HomeScreen extends StatelessWidget {
                   _itemsController.removeItem(itemsIndexData.stringId),
               key: Key(itemsIndexData.stringId),
               child: ItemTile(
+                itemId:itemsIndexData.stringId,
                 index: index,
                 title: itemsIndexData.title,
                 dateTime: itemsIndexData.dateTime,
