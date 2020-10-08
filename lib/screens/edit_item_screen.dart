@@ -20,6 +20,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
   DateTime _dateResponse;
   Item _item;
 
+  final _itemsController = Get.find<Items>();
+
   void setDateResponseCallBack(DateTime data) {
     _dateResponse = data;
     print('call back: $_dateResponse');
@@ -34,6 +36,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
         title: _item.title,
         description: _item.description,
       );
+      _itemsController.addItem(_item);
+      Get.back();
     }
     print(
       'check: ${_item.title},${_item.description},${_item.stringId},${_item.dateTime}',

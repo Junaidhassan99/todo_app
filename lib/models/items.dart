@@ -51,4 +51,8 @@ class Items extends GetxController {
   List<Item> get getItems {
     return _itemsData;
   }
+
+  void addItem(Item item) {
+    _itemsData.insert(0, item);
+  }
 }
