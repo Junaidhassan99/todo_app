@@ -29,7 +29,9 @@ class Item {
 class Items extends GetxController {
   Database database;
 
-  var _itemsData = [].obs;
+  var _itemsData = [
+   
+  ].obs;
 
   Future<void> loadData() async {
     // Get a location using getDatabasesPath
@@ -56,21 +58,18 @@ class Items extends GetxController {
         TodoDataBaseUtilities.dateTime,
         TodoDataBaseUtilities.description,
       ],
+      orderBy:  TodoDataBaseUtilities.dateTime,
     );
     print(queryData.toString());
-    _itemsData.value = queryData
-        .map((e) {
-          print('check 1: $e');
-          return Item(
-            stringId: e[TodoDataBaseUtilities.stringId],
-            title: e[TodoDataBaseUtilities.title],
-            dateTime: DateTime.parse(e[TodoDataBaseUtilities.dateTime]),
-            description: e[TodoDataBaseUtilities.description],
-          );
-        })
-        .toList()
-        .reversed
-        .toList();
+    _itemsData.value = queryData.map((e) {
+      print('check 1: $e');
+      return Item(
+        stringId: e[TodoDataBaseUtilities.stringId],
+        title: e[TodoDataBaseUtilities.title],
+        dateTime: DateTime.parse(e[TodoDataBaseUtilities.dateTime]),
+        description: e[TodoDataBaseUtilities.description],
+      );
+    }).toList().reversed.toList();
     //queryData.map((e) => null).toList();
   }
 
@@ -87,7 +86,7 @@ class Items extends GetxController {
     };
   }
 
-  void addItem(Item item) async {
+  void addItem(Item item) async{
     _itemsData.insert(0, item);
     await database.insert(
       TodoDataBaseUtilities.tableName,
@@ -126,11 +125,12 @@ class Items extends GetxController {
     );
   }
 
-  void undoDelete(int index, Item item) async {
+  void undoDelete(int index, Item item) async{
     _itemsData.insert(index, item);
     await database.insert(
       TodoDataBaseUtilities.tableName,
       construstItemMap(item),
     );
+    
   }
 }
