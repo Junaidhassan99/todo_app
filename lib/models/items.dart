@@ -69,4 +69,8 @@ class Items extends GetxController {
         _itemsData.indexWhere((item) => item.stringId == mItem.stringId);
     _itemsData[itemIndex] = mItem;
   }
+
+  void undoDelete(int index, Item item) {
+    _itemsData.insert(index, item);
+  }
 }

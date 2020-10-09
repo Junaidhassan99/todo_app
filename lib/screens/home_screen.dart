@@ -8,12 +8,28 @@ import 'package:todo_app/widgets/item_tile.dart';
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home-screen';
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   final _itemsController = Get.put(Items());
+
+  Widget _dismissBackground(AlignmentGeometry alignmentGeometry) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 10,
+      ),
+      color: Colors.red,
+      alignment: alignmentGeometry,
+      child: Icon(
+        Icons.delete,
+        size: 40,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    //final itemsData = itemsController.getItems;
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Todo'),
       ),
@@ -23,11 +39,34 @@ class HomeScreen extends StatelessWidget {
           itemBuilder: (_, index) {
             final itemsIndexData = _itemsController.getItems[index];
             return Dismissible(
-              onDismissed: (_) =>
-                  _itemsController.removeItem(itemsIndexData.stringId),
+              secondaryBackground: _dismissBackground(Alignment.centerRight),
+              background: _dismissBackground(Alignment.centerLeft),
+              onDismissed: (_) {
+                final Item undoItem =
+                    _itemsController.getItemById(itemsIndexData.stringId);
+                _itemsController.removeItem(itemsIndexData.stringId);
+
+                _scaffoldKey.currentState.hideCurrentSnackBar();
+                final snackBar = SnackBar(
+                  backgroundColor: Colors.black,
+                  content: Text(
+                    'Undo Delete',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  action: SnackBarAction(
+                    textColor: Colors.blue,
+                    label: 'Undo',
+                    onPressed: () => _itemsController.undoDelete(
+                      index,
+                      undoItem,
+                    ),
+                  ),
+                );
+                _scaffoldKey.currentState.showSnackBar(snackBar);
+              },
               key: Key(itemsIndexData.stringId),
               child: ItemTile(
-                itemId:itemsIndexData.stringId,
+                itemId: itemsIndexData.stringId,
                 index: index,
                 title: itemsIndexData.title,
                 dateTime: itemsIndexData.dateTime,
