@@ -58,7 +58,7 @@ class Items extends GetxController {
         TodoDataBaseUtilities.dateTime,
         TodoDataBaseUtilities.description,
       ],
-      orderBy:  TodoDataBaseUtilities.dateTime,
+      orderBy:  TodoDataBaseUtilities.stringId,
     );
     print(queryData.toString());
     _itemsData.value = queryData.map((e) {
