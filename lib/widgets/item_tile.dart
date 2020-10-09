@@ -28,24 +28,24 @@ class ItemTile extends StatelessWidget {
           ),
           subtitle: Text('${DateFormat.yMMMMEEEEd().format(dateTime)}'),
           leading: CircleAvatar(
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Get.theme.primaryColor,
             child: Text(
               '${index + 1}',
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
+              style:const TextStyle(
                 color: Colors.white,
               ),
             ),
           ),
           title: Text(
             title,
-            style: TextStyle(
+            style:const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
-        Divider(),
+        const Divider(),
       ],
     );
   }

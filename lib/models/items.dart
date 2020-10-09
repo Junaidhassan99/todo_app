@@ -14,6 +14,7 @@ class TodoDataBaseUtilities {
 }
 
 class Item {
+  //stringId is created using DateTime.now() hence being used for orderBy in the query
   final String title;
   final DateTime dateTime;
   final String stringId;
@@ -60,9 +61,9 @@ class Items extends GetxController {
       ],
       orderBy:  TodoDataBaseUtilities.stringId,
     );
-    print(queryData.toString());
+    
     _itemsData.value = queryData.map((e) {
-      print('check 1: $e');
+    
       return Item(
         stringId: e[TodoDataBaseUtilities.stringId],
         title: e[TodoDataBaseUtilities.title],
@@ -70,7 +71,7 @@ class Items extends GetxController {
         description: e[TodoDataBaseUtilities.description],
       );
     }).toList().reversed.toList();
-    //queryData.map((e) => null).toList();
+   
   }
 
   List<dynamic> get getItems {

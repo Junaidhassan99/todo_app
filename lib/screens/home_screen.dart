@@ -14,12 +14,12 @@ class HomeScreen extends StatelessWidget {
 
   Widget _dismissBackground(AlignmentGeometry alignmentGeometry) {
     return Container(
-      padding: EdgeInsets.symmetric(
+      padding:const EdgeInsets.symmetric(
         horizontal: 10,
       ),
       color: Colors.red,
       alignment: alignmentGeometry,
-      child: Icon(
+      child:const Icon(
         Icons.delete,
         size: 40,
       ),
@@ -31,7 +31,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Todo'),
+        title:const Text('Todo'),
       ),
       body: FutureBuilder(
         future: _itemsController.loadData(),
@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
           if (!(snapshot.connectionState == ConnectionState.done)) {
             return Center(child: CircularProgressIndicator());
           } else {
-            print(_itemsController.getItems.length.toString());
+           
             return Obx(
               () => ListView.builder(
                 itemCount: _itemsController.getItems.length,
@@ -58,9 +58,9 @@ class HomeScreen extends StatelessWidget {
                       _scaffoldKey.currentState.hideCurrentSnackBar();
                       final snackBar = SnackBar(
                         backgroundColor: Colors.black,
-                        content: Text(
+                        content:const Text(
                           'Undo Delete',
-                          style: TextStyle(color: Colors.white),
+                          style:const TextStyle(color: Colors.white),
                         ),
                         action: SnackBarAction(
                           textColor: Colors.blue,
@@ -88,8 +88,8 @@ class HomeScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        child: Icon(
+        backgroundColor: Get.theme.primaryColor,
+        child:const Icon(
           Icons.add,
           color: Colors.white,
         ),

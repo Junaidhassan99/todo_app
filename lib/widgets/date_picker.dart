@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class DatePicker extends StatefulWidget {
@@ -19,10 +20,10 @@ class _DatePickerState extends State<DatePicker> {
   @override
   void initState() {
     super.initState();
-    //_dateResponse = DateTime.now();
+   
     _dateResponse = widget.setDateData;
     widget.setDateResponse(_dateResponse);
-    print('Work 2: $_dateResponse');
+  
   }
 
   @override
@@ -31,7 +32,7 @@ class _DatePickerState extends State<DatePicker> {
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(15.0)),
         border: Border.all(
-          color: Theme.of(context).primaryColor,
+          color: Get.theme.primaryColor,
           width: 3,
         ),
       ),
@@ -56,17 +57,17 @@ class _DatePickerState extends State<DatePicker> {
                     : _dateResponse,
                 lastDate: DateTime(2100),
               );
-              //print(dateResponse);
+             
               if (_dateResponse != null) {
                 setState(() {
-                  print('Work 3 !null: $_dateResponse');
+                 
                   widget.setDateResponse(_dateResponse);
                 });
               } else {
                 setState(
                   () {
                     _dateResponse = errorCaseDate;
-                    print('Work 4 null: $_dateResponse');
+                   
                     widget.setDateResponse(_dateResponse);
                   },
                 );

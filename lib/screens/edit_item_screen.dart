@@ -30,7 +30,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
 
   void setDateResponseCallBack(DateTime data) {
     _dateResponse = data;
-    print('call back: $_dateResponse');
+    
   }
 
   void _saveForm() {
@@ -50,15 +50,13 @@ class _EditItemScreenState extends State<EditItemScreen> {
 
       Get.back();
     }
-    print(
-      'check: ${_item.title},${_item.description},${_item.stringId},${_item.dateTime}',
-    );
+    
   }
 
   void _determineEditModeAndInitializeItem() {
     _dateResponse = DateTime.now();
     final String itemId = Get.arguments as String;
-    print(itemId);
+   
     if (itemId == null) {
       editItemScreenMode = EditItemScreenMode.Add;
 
@@ -73,7 +71,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
 
       _item = _itemsController.getItemById(itemId);
 
-      print('Work: ${_item.dateTime}');
+     
     }
   }
 
@@ -96,7 +94,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
         actions: [
           FlatButton(
             onPressed: _saveForm,
-            child: Text('Save'),
+            child:const Text('Save'),
           ),
         ],
       ),
