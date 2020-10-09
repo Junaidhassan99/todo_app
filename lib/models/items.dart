@@ -1,5 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+
+class TodoDataBaseUtilities {
+  static const dataBaseName = 'todo.db';
+  static const tableName = 'items_table';
+
+  static const title = 'title';
+  static const dateTime = 'dateTime';
+  static const stringId = 'stringId';
+  static const description = 'description';
+}
 
 class Item {
   final String title;
@@ -15,62 +27,110 @@ class Item {
 }
 
 class Items extends GetxController {
-  var _itemsData = [
-    Item(
-      dateTime: DateTime.now(),
-      stringId: '1',
-      title: 'Eat',
-    ),
-    Item(
-      dateTime: DateTime.now(),
-      stringId: '2',
-      title: 'Movie',
-    ),
-    Item(
-      dateTime: DateTime.now(),
-      stringId: '3',
-      title: 'Sleep',
-    ),
-    Item(
-      dateTime: DateTime.now(),
-      stringId: '4',
-      title: 'Work',
-    ),
-    Item(
-      dateTime: DateTime.now(),
-      stringId: '5',
-      title: 'Work',
-    ),
-    Item(
-      dateTime: DateTime.now(),
-      stringId: '6',
-      title: 'Work',
-    ),
-  ].obs;
+  Database database;
 
-  List<Item> get getItems {
+  var _itemsData = [].obs;
+
+  Future<void> loadData() async {
+    // Get a location using getDatabasesPath
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, TodoDataBaseUtilities.dataBaseName);
+
+    // open the database
+    database = await openDatabase(
+      path,
+      version: 1,
+      onCreate: (Database db, int version) async {
+        // When creating the db, create the table
+        await db.execute(
+          'CREATE TABLE ${TodoDataBaseUtilities.tableName} (${TodoDataBaseUtilities.stringId} TEXT PRIMARY KEY, ${TodoDataBaseUtilities.title} TEXT, ${TodoDataBaseUtilities.dateTime} TEXT, ${TodoDataBaseUtilities.description} TEXT)',
+        );
+      },
+    );
+
+    final queryData = await database.query(
+      TodoDataBaseUtilities.tableName,
+      columns: [
+        TodoDataBaseUtilities.stringId,
+        TodoDataBaseUtilities.title,
+        TodoDataBaseUtilities.dateTime,
+        TodoDataBaseUtilities.description,
+      ],
+    );
+    print(queryData.toString());
+    _itemsData.value = queryData
+        .map((e) {
+          print('check 1: $e');
+          return Item(
+            stringId: e[TodoDataBaseUtilities.stringId],
+            title: e[TodoDataBaseUtilities.title],
+            dateTime: DateTime.parse(e[TodoDataBaseUtilities.dateTime]),
+            description: e[TodoDataBaseUtilities.description],
+          );
+        })
+        .toList()
+        .reversed
+        .toList();
+    //queryData.map((e) => null).toList();
+  }
+
+  List<dynamic> get getItems {
     return _itemsData;
   }
 
-  void addItem(Item item) {
-    _itemsData.insert(0, item);
+  Map<String, dynamic> construstItemMap(Item item) {
+    return {
+      TodoDataBaseUtilities.stringId: item.stringId,
+      TodoDataBaseUtilities.title: item.title,
+      TodoDataBaseUtilities.dateTime: item.dateTime.toIso8601String(),
+      TodoDataBaseUtilities.description: item.description,
+    };
   }
 
-  void removeItem(String itemId) {
+  void addItem(Item item) async {
+    _itemsData.insert(0, item);
+    await database.insert(
+      TodoDataBaseUtilities.tableName,
+      construstItemMap(item),
+    );
+  }
+
+  void removeItem(String itemId) async {
     _itemsData.removeWhere((item) => item.stringId == itemId);
+
+    await database.delete(
+      TodoDataBaseUtilities.tableName,
+      where: '${TodoDataBaseUtilities.stringId}=?',
+      whereArgs: [
+        itemId,
+      ],
+    );
   }
 
   Item getItemById(String itemId) {
     return _itemsData.firstWhere((item) => item.stringId == itemId);
   }
 
-  void updateItem(Item mItem) {
+  void updateItem(Item mItem) async {
     int itemIndex =
         _itemsData.indexWhere((item) => item.stringId == mItem.stringId);
     _itemsData[itemIndex] = mItem;
+
+    await database.update(
+      TodoDataBaseUtilities.tableName,
+      construstItemMap(mItem),
+      where: '${TodoDataBaseUtilities.stringId}=?',
+      whereArgs: [
+        mItem.stringId,
+      ],
+    );
   }
 
-  void undoDelete(int index, Item item) {
+  void undoDelete(int index, Item item) async {
     _itemsData.insert(index, item);
+    await database.insert(
+      TodoDataBaseUtilities.tableName,
+      construstItemMap(item),
+    );
   }
 }

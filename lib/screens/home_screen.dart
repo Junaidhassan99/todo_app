@@ -33,47 +33,59 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Todo'),
       ),
-      body: Obx(
-        () => ListView.builder(
-          itemCount: _itemsController.getItems.length,
-          itemBuilder: (_, index) {
-            final itemsIndexData = _itemsController.getItems[index];
-            return Dismissible(
-              secondaryBackground: _dismissBackground(Alignment.centerRight),
-              background: _dismissBackground(Alignment.centerLeft),
-              onDismissed: (_) {
-                final Item undoItem =
-                    _itemsController.getItemById(itemsIndexData.stringId);
-                _itemsController.removeItem(itemsIndexData.stringId);
+      body: FutureBuilder(
+        future: _itemsController.loadData(),
+        builder: (_, snapshot) {
+          if (!(snapshot.connectionState == ConnectionState.done)) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            print(_itemsController.getItems.length.toString());
+            return Obx(
+              () => ListView.builder(
+                itemCount: _itemsController.getItems.length,
+                itemBuilder: (_, index) {
+                  final itemsIndexData = _itemsController.getItems[index];
+                  return Dismissible(
+                    secondaryBackground:
+                        _dismissBackground(Alignment.centerRight),
+                    background: _dismissBackground(Alignment.centerLeft),
+                    onDismissed: (_) {
+                      final Item undoItem =
+                          _itemsController.getItemById(itemsIndexData.stringId);
 
-                _scaffoldKey.currentState.hideCurrentSnackBar();
-                final snackBar = SnackBar(
-                  backgroundColor: Colors.black,
-                  content: Text(
-                    'Undo Delete',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  action: SnackBarAction(
-                    textColor: Colors.blue,
-                    label: 'Undo',
-                    onPressed: () => _itemsController.undoDelete(
-                      index,
-                      undoItem,
+                      _itemsController.removeItem(itemsIndexData.stringId);
+
+                      _scaffoldKey.currentState.hideCurrentSnackBar();
+                      final snackBar = SnackBar(
+                        backgroundColor: Colors.black,
+                        content: Text(
+                          'Undo Delete',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        action: SnackBarAction(
+                          textColor: Colors.blue,
+                          label: 'Undo',
+                          onPressed: () => _itemsController.undoDelete(
+                            index,
+                            undoItem,
+                          ),
+                        ),
+                      );
+                      _scaffoldKey.currentState.showSnackBar(snackBar);
+                    },
+                    key: Key(itemsIndexData.stringId),
+                    child: ItemTile(
+                      itemId: itemsIndexData.stringId,
+                      index: index,
+                      title: itemsIndexData.title,
+                      dateTime: itemsIndexData.dateTime,
                     ),
-                  ),
-                );
-                _scaffoldKey.currentState.showSnackBar(snackBar);
-              },
-              key: Key(itemsIndexData.stringId),
-              child: ItemTile(
-                itemId: itemsIndexData.stringId,
-                index: index,
-                title: itemsIndexData.title,
-                dateTime: itemsIndexData.dateTime,
+                  );
+                },
               ),
             );
-          },
-        ),
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
