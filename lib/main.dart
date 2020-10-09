@@ -11,6 +11,7 @@ class TodoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      title: 'ToDo List',
       theme: ThemeData.dark().copyWith(
         primaryColor: Colors.red,
         accentColor: Colors.red,
