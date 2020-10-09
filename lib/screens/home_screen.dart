@@ -14,12 +14,12 @@ class HomeScreen extends StatelessWidget {
 
   Widget _dismissBackground(AlignmentGeometry alignmentGeometry) {
     return Container(
-      padding:const EdgeInsets.symmetric(
+      padding: const EdgeInsets.symmetric(
         horizontal: 10,
       ),
       color: Colors.red,
       alignment: alignmentGeometry,
-      child:const Icon(
+      child: const Icon(
         Icons.delete,
         size: 40,
       ),
@@ -31,7 +31,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title:const Text('Todo'),
+        title: const Text('Todo'),
       ),
       body: FutureBuilder(
         future: _itemsController.loadData(),
@@ -39,57 +39,63 @@ class HomeScreen extends StatelessWidget {
           if (!(snapshot.connectionState == ConnectionState.done)) {
             return Center(child: CircularProgressIndicator());
           } else {
-           
             return Obx(
-              () => ListView.builder(
-                itemCount: _itemsController.getItems.length,
-                itemBuilder: (_, index) {
-                  final itemsIndexData = _itemsController.getItems[index];
-                  return Dismissible(
-                    secondaryBackground:
-                        _dismissBackground(Alignment.centerRight),
-                    background: _dismissBackground(Alignment.centerLeft),
-                    onDismissed: (_) {
-                      final Item undoItem =
-                          _itemsController.getItemById(itemsIndexData.stringId);
-
-                      _itemsController.removeItem(itemsIndexData.stringId);
-
-                      _scaffoldKey.currentState.hideCurrentSnackBar();
-                      final snackBar = SnackBar(
-                        backgroundColor: Colors.black,
-                        content:const Text(
-                          'Undo Delete',
-                          style:const TextStyle(color: Colors.white),
-                        ),
-                        action: SnackBarAction(
-                          textColor: Colors.blue,
-                          label: 'Undo',
-                          onPressed: () => _itemsController.undoDelete(
-                            index,
-                            undoItem,
-                          ),
-                        ),
-                      );
-                      _scaffoldKey.currentState.showSnackBar(snackBar);
-                    },
-                    key: Key(itemsIndexData.stringId),
-                    child: ItemTile(
-                      itemId: itemsIndexData.stringId,
-                      index: index,
-                      title: itemsIndexData.title,
-                      dateTime: itemsIndexData.dateTime,
-                    ),
+              () {
+                if (_itemsController.getItems.isEmpty) {
+                  return Center(
+                    child: Text('Nothing to show. Add something!'),
                   );
-                },
-              ),
+                }
+                return ListView.builder(
+                  itemCount: _itemsController.getItems.length,
+                  itemBuilder: (_, index) {
+                    final itemsIndexData = _itemsController.getItems[index];
+                    return Dismissible(
+                      secondaryBackground:
+                          _dismissBackground(Alignment.centerRight),
+                      background: _dismissBackground(Alignment.centerLeft),
+                      onDismissed: (_) {
+                        final Item undoItem = _itemsController
+                            .getItemById(itemsIndexData.stringId);
+
+                        _itemsController.removeItem(itemsIndexData.stringId);
+
+                        _scaffoldKey.currentState.hideCurrentSnackBar();
+                        final snackBar = SnackBar(
+                          backgroundColor: Colors.black,
+                          content: const Text(
+                            'Undo Delete',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          action: SnackBarAction(
+                            textColor: Colors.blue,
+                            label: 'Undo',
+                            onPressed: () => _itemsController.undoDelete(
+                              index,
+                              undoItem,
+                            ),
+                          ),
+                        );
+                        _scaffoldKey.currentState.showSnackBar(snackBar);
+                      },
+                      key: Key(itemsIndexData.stringId),
+                      child: ItemTile(
+                        itemId: itemsIndexData.stringId,
+                        index: index,
+                        title: itemsIndexData.title,
+                        dateTime: itemsIndexData.dateTime,
+                      ),
+                    );
+                  },
+                );
+              },
             );
           }
         },
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Get.theme.primaryColor,
-        child:const Icon(
+        child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
