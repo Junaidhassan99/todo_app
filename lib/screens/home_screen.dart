@@ -14,8 +14,9 @@ class HomeScreen extends StatelessWidget {
 
   Widget _dismissBackground(AlignmentGeometry alignmentGeometry) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
+      margin: const EdgeInsets.only(
+        //horizontal: 10,vertical: 8,
+        right: 10,
       ),
       color: Colors.red,
       alignment: alignmentGeometry,
