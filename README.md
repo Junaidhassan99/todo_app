@@ -15,6 +15,9 @@ For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-![Uploading ToDo Rec.gif…]()
+
+![ToDo Rec](https://user-images.githubusercontent.com/61021884/103148437-65405400-4781-11eb-98c2-66218ca2fb01.gif)
+
+
 
 
